@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { TasksService } from './tasks.service';
+import { Task as ITask } from './task.model';
 
 @Controller('tasks')
 export class TasksController {
@@ -13,8 +14,18 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getTasks() {
+  getTasks(): ITask[] {
     return this.tasksService.getTasks();
+  }
+
+  @Post()
+  createTask(
+    @Body('title') title: string,
+    @Body('description') description: string,
+  ): ITask {
+    // console.log(title, description);
+
+    return this.tasksService.createTask(title, description);
   }
 
   // Example: Func. of Class
