@@ -28,4 +28,21 @@ export class TasksService {
     this.tasks.push(task);
     return task;
   }
+
+  // Call by reference. (Updating)
+  updateTask(id: string, status: ETaskStatus): ITask {
+    const task = this.getTaskById(id);
+    task.status = status;
+
+    return task;
+  }
+
+  delTaskById(id: string): string {
+    const isExisted = this.tasks.findIndex((task) => task.id === id);
+
+    if (isExisted === -1) return 'No item be deleted';
+
+    this.tasks = this.tasks.filter((task) => task.id !== id);
+    return id;
+  }
 }
