@@ -6,10 +6,12 @@ import {
   Body,
   Param,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task as ITask, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -23,14 +25,18 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Get()
-  getTasks(): ITask[] {
-    return this.tasksService.getTasks();
+  getAllTasks(@Query() getTasksFilterDto: GetTasksFilterDto): ITask[] {
+    if (Object.keys(getTasksFilterDto).length) {
+      return this.tasksService.getTasksWithFilters(getTasksFilterDto);
+    } else {
+      return this.tasksService.getTasks();
+    }
   }
 
   // localhost:3000/tasks/8aed677a-41f0-46bc-ac1d-8686e0a30f86
   @Get('/:id')
   getTask(@Param('id') id: string): ITask {
-    console.log(this.tasksService.getTaskById(id));
+    // console.log(this.tasksService.getTaskById(id));
     return this.tasksService.getTaskById(id);
   }
 
