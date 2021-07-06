@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task as ITask, TaskStatus as ETaskStatus } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -33,7 +33,13 @@ export class TasksService {
   }
 
   getTaskById(id: string): ITask {
-    return this.tasks.find((task) => task.id === id);
+    // return this.tasks.find((task) => task.id === id);
+
+    const result = this.tasks.find((task) => task.id === id);
+
+    if (!result) throw new NotFoundException(`The id: ${id} isn't existed`);
+
+    return result;
   }
 
   createTask(createTaskDto: CreateTaskDto): ITask {
@@ -59,11 +65,13 @@ export class TasksService {
   }
 
   delTaskById(id: string): string {
-    const isExisted = this.tasks.findIndex((task) => task.id === id);
+    // const isExisted = this.tasks.findIndex((task) => task.id === id);
 
-    if (isExisted === -1) return 'No item be deleted';
+    // if (isExisted === -1) return 'No item be deleted';
 
-    this.tasks = this.tasks.filter((task) => task.id !== id);
+    const result = this.getTaskById(id);
+
+    this.tasks = this.tasks.filter((task) => task.id !== result.id);
     return id;
   }
 }
