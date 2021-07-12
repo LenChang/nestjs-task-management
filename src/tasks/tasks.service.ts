@@ -37,28 +37,24 @@ export class TasksService {
     return result;
   }
 
-  // createTask(createTaskDto: CreateTaskDto): ITask {
-  //   const { title, description } = createTaskDto;
-  //   const task: ITask = {
-  //     id: uuid(),
-  //     title,
-  //     description,
-  //     status: ETaskStatus.OPEN,
-  //   };
-  //   this.tasks.push(task);
-  //   return task;
-  // }
-  // // Call by reference. (Updating)
-  // updateTask(id: string, status: ETaskStatus): ITask {
-  //   const task = this.getTaskById(id);
-  //   task.status = status;
-  //   return task;
-  // }
-  // delTaskById(id: string): string {
-  //   // const isExisted = this.tasks.findIndex((task) => task.id === id);
-  //   // if (isExisted === -1) return 'No item be deleted';
-  //   const result = this.getTaskById(id);
-  //   this.tasks = this.tasks.filter((task) => task.id !== result.id);
-  //   return id;
-  // }
+  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+    return this.taskRepository.createTask(createTaskDto);
+  }
+
+  // Call by reference. (Updating)
+  async updateTask(id: string, status: TaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id);
+    task.status = status;
+    await this.taskRepository.save(task);
+
+    return task;
+  }
+
+  async delTaskById(id: string): Promise<void> {
+    const result = await this.taskRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Task with ID: "${id}" not found`);
+    }
+  }
 }
