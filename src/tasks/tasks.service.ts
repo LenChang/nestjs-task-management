@@ -12,24 +12,11 @@ export class TasksService {
     @InjectRepository(TaskRepository) private taskRepository: TaskRepository,
   ) {}
 
-  // getTasks(): ITask[] {
-  //   return this.tasks;
-  // }
-  // getTasksWithFilters(filterDto: GetTasksFilterDto): ITask[] {
-  //   const { status, search } = filterDto;
-  //   let tasks = this.getTasks();
-  //   if (status) {
-  //     tasks = tasks.filter((task) => task.status === status);
-  //   }
-  //   if (search) {
-  //     tasks = tasks.filter((task) => {
-  //       if (task.title.includes(search) || task.description.includes(search))
-  //         return true;
-  //       return false;
-  //     });
-  //   }
-  //   return tasks;
-  // }
+  getTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
+    const result = this.taskRepository.getTasks(filterDto);
+
+    return result;
+  }
 
   async getTaskById(id: string): Promise<Task> {
     const result = await this.taskRepository.findOne(id);

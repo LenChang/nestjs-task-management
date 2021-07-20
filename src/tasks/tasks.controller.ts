@@ -25,14 +25,10 @@ export class TasksController {
   // Method 2: private
   constructor(private tasksService: TasksService) {}
 
-  // @Get()
-  // getAllTasks(@Query() getTasksFilterDto: GetTasksFilterDto): ITask[] {
-  //   if (Object.keys(getTasksFilterDto).length) {
-  //     return this.tasksService.getTasksWithFilters(getTasksFilterDto);
-  //   } else {
-  //     return this.tasksService.getTasks();
-  //   }
-  // }
+  @Get()
+  getAllTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
+    return this.tasksService.getTasks(filterDto);
+  }
 
   // localhost:3000/tasks/8aed677a-41f0-46bc-ac1d-8686e0a30f86
   @Get('/:id')
