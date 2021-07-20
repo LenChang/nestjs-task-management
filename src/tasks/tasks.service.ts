@@ -24,7 +24,7 @@ export class TasksService {
     return result;
   }
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
+  createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.taskRepository.createTask(createTaskDto);
   }
 
