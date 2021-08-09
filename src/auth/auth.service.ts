@@ -5,7 +5,6 @@ import * as bcrypt from 'bcrypt';
 
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { UserRepository } from './user.repository';
-import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +17,9 @@ export class AuthService {
     return this.userRepo.createUser(authCredentialsDto);
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<JwtPayload> {
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<{ accessToken: string }> {
     const { userName, password } = authCredentialsDto;
 
     const user = await this.userRepo.findOne({ userName });
@@ -26,7 +27,7 @@ export class AuthService {
     if (user && bcrypt.compareSync(password, user.password)) {
       const payload = { userName };
       const accessToken = await this.jwtService.sign(payload);
-      return { userName: accessToken };
+      return { accessToken };
     }
 
     throw new UnauthorizedException('Please check your credentials');

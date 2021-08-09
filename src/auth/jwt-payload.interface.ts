@@ -1,3 +1,3 @@
 export interface JwtPayload {
-  accessToken: string;
+  userName: string;
 }
